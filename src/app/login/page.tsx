@@ -6,12 +6,32 @@ import { useRouter } from 'next/navigation'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Perform login logic here
-    router.push('/profile')
+
+    setError('')
+
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      router.push('/lessons')
+    } else {
+      setError(data.error || 'Login failed')
+    }
   }
 
   return (
@@ -42,8 +62,8 @@ export default function LoginPage() {
             Login
           </button>
         </form>
+        {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
       </div>
     </div>
   )
 }
-
