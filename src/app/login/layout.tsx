@@ -5,8 +5,8 @@ export default function AuthLayout({
 }) {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="bg-blue-600 text-white py-4 text-center">
-        <h1 className="text-xl font-bold">MyApp Authentication</h1>
+      <header className="bg-sky-600 text-white py-4 text-center">
+        <h1 className="text-xl font-bold">MathGraph</h1>
       </header>
       <main className="flex-grow flex items-center justify-center">
         {children}
