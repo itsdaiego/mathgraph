@@ -29,7 +29,7 @@ export default function LessonLayout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-blue-600 text-white p-4">
+      <header className="bg-sky-600 text-white p-4">
         <div className="container mx-auto">
           <h1 className="text-xl font-bold">Welcome, {username}</h1>
         </div>

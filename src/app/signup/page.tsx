@@ -68,7 +68,7 @@ export default function SignupPage() {
             value={user.email}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
             required
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <input
             type="text"
@@ -76,7 +76,7 @@ export default function SignupPage() {
             value={user.username}
             onChange={(e) => setUser({ ...user, username: e.target.value })}
             required
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <input
             type="password"
@@ -84,7 +84,7 @@ export default function SignupPage() {
             value={user.password}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
             required
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <button
             type="submit"

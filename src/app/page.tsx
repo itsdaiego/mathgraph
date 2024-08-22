@@ -1,17 +1,40 @@
+import Image from 'next/image'
+
 const Home = () => {
+  const introURL = '/intro.png'
+  const outroURL = '/outro.png'
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="bg-blue-600 text-white py-6 text-center">
+      <header className="bg-sky-600 text-white py-6 text-center">
         <h1 className="text-4xl font-bold">Mathgraph</h1>
-        <p className="mt-2 text-lg">Learning by visualizing cool stuff</p>
+        <p className="mt-2 text-lg">Lean math by visualizing it!</p>
       </header>
 
-      <main className="flex-grow flex flex-col items-center justify-center">
+      <main className="flex-grow flex flex-col items-center mt-20">
+        <div className="flex flex-row mt-10 mb-10">
+          <Image 
+            src={introURL} 
+            alt={"intro-image"} 
+            width={400}
+            height={400}
+            objectFit="cover" 
+            priority={true} 
+          />
+          <Image 
+            src={outroURL} 
+            alt={"outro-image"} 
+            width={400}
+            height={400}
+            objectFit="cover" 
+            priority={true} 
+          />
+        </div>
         <h2 className="text-2xl font-semibold mb-4">Get Started</h2>
         <div className="space-x-4">
           <a
             href="/login"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className="bg-sky-500 text-white px-4 py-2 rounded-md hover:bg-sky-600 transition duration-300"
           >
             Login
           </a>
