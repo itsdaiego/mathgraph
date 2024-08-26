@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 
-type Lesson = {
+export type Lesson = {
   id: number
   title: string
   image: string

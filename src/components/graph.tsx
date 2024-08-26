@@ -1,3 +1,4 @@
+'use client'
 
 type Props = {
   width: number
@@ -7,8 +8,14 @@ type Props = {
   yAxisCount: number
 }
 
+const TEXT_OFFSET = 15
+
 const Graph = (props: Props) => {
   const { width, height, gridSize, xAxisCount, yAxisCount } = props
+  const xCount = (xAxisCount / 2) * -1
+  const yCount = (yAxisCount / 2) * -1
+
+  console.log(xCount, yCount)
 
   return (
     <div>
@@ -37,29 +44,30 @@ const Graph = (props: Props) => {
         ))}
 
         <line x1="0" y1={height / 2} x2={width} y2={height / 2} stroke="black" />
-        <line x1={width / 2} y1="0" x2={width / 2} y2={height} stroke="black" />
 
         {Array.from({ length: xAxisCount }).map((_, i) => (
           <text
             key={i}
             x={i * gridSize}
-            y={height / 2 + 15}
+            y={height / 2 + TEXT_OFFSET}
             fontSize="12"
             textAnchor="middle"
           >
-            {i - Math.floor(xAxisCount / 2)}
+            {i + xCount}
           </text>
         ))}
+
+        <line x1={width / 2} y1="0" x2={width / 2} y2={height} stroke="black" />
 
         {Array.from({ length: yAxisCount }).map((_, i) => (
           <text
             key={i}
-            x={width / 2 - 15}
-            y={i * gridSize + 5}
+            x={width / 2 + TEXT_OFFSET}
+            y={i * gridSize}
             fontSize="12"
             textAnchor="end"
           >
-            {Math.floor(yAxisCount / 2) - i}
+            {i + yCount}
           </text>
         ))}
       </svg>
