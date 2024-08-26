@@ -1,8 +1,19 @@
 import Image from 'next/image'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 const Home = () => {
   const introURL = '/intro.png'
   const outroURL = '/outro.png'
+
+  const cookieStore = cookies()
+  const sessionCookie = cookieStore.get('session_token')
+
+  console.log('sessionCookie', sessionCookie)
+
+  if (sessionCookie) {
+    redirect('/lessons')
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
