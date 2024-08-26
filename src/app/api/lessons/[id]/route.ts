@@ -1,34 +1,48 @@
-import {createClient} from "@supabase/supabase-js"
-import { NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
+import { NextRequest, NextResponse } from "next/server"
+import { cookies } from "next/headers"
 
 const supabaseURL = process.env.SUPABASE_URL as string
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 
 const supabase = createClient(supabaseURL, supabaseAnonKey)
 
-export async function GET(req: Request, params: { id: string }) {
-  const path = new URL(req.url).pathname.split("/")
-  const id = path[path.length - 1]
+export async function GET(req: NextRequest, params: { exerciseId: string }) {
+  try {
+    const cookieStore = cookies()
+    const sessionCookies = cookieStore.get('session_token')
 
-  if (!id) {
-    console.log("No lesson ID provided")
-    return NextResponse.json({ error: "No lesson ID provided" }, { status: 400 })
+    if (!sessionCookies) {
+      return NextResponse.json({ error: "Session token not found is epxired" }, { status: 401 })
+    }
+
+    const path = new URL(req.url).pathname?.split("/")
+    const id = path[path.length - 1]
+
+    if (!id) {
+      return NextResponse.json({ error: "No lesson Id provided" }, { status: 400 })
+    }
+
+    const { searchParams } = new URL(req.url)
+    const exerciseId = searchParams.get('exerciseId')
+
+    if (!exerciseId) {
+      return NextResponse.json({ error: "No exercise Id provided" }, { status: 400 })
+    }
+
+    const { data, error } = await supabase
+      .from("exercises")
+      .select("*")
+      .eq("lesson_id", id)
+      .eq("id", exerciseId)
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    return NextResponse.json({ ...data }, { status: 200 })
+  } catch (error) {
+    NextResponse.json({ error }, { status: 500 })
   }
-
-  const exerciseID = params.id
-
-  const lesson = await supabase
-    .from("exercises")
-    .select("*")
-    .eq("lesson_id", id)
-    .eq("id", exerciseID)
-    .single()
-
-  console.log(lesson)
-
-  if (!lesson) {
-    return NextResponse.json({ error: "Lesson not found" }, { status: 404 })
-  }
-
-  return NextResponse.json(lesson)
 }

@@ -34,13 +34,11 @@ export async function POST(req: Request) {
 
     if (profileError) throw new Error(profileError.message || 'Failed to create profile')
 
-    console.log('commiting stuff')
     await client.rpc('commit')
 
     return new Response(JSON.stringify({ user: user.user }), { status: 201 })
   } catch (error: any) {
     await client.rpc('rollback')
-    console.log('rolledback', error)
     return new Response(JSON.stringify({ error: error.message }), { status: 500 })
   }
 }

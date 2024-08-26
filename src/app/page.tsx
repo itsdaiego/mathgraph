@@ -9,8 +9,6 @@ const Home = () => {
   const cookieStore = cookies()
   const sessionCookie = cookieStore.get('session_token')
 
-  console.log('sessionCookie', sessionCookie)
-
   if (sessionCookie) {
     redirect('/lessons')
   }
