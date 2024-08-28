@@ -53,16 +53,25 @@ const LessonListPage = ({ params }: URLOptions) => {
   return (
     <div className="flex items-center justify-center flex-col">
       <h1 className="text-2xl">{title}</h1>
-      <section className="mt-40">
-        <GraphBox
-          lessonExercise={lessonExercise}
-          width={800}
-          height={800}
-          gridSize={40}
-          xAxisCount={20}
-          yAxisCount={20}
-        />
-      </section>
+      <main className="flex flex-row mt-40">
+        <section>
+          <h2 className="text-xl mb-2">Intro</h2>
+          <p>{lessonExercise?.description}</p>
+
+          <p className="mt-20 mb-2 text-lg">Change the values below to see how the line is plotted on the graph:</p>
+          <input className="inline-block text-sm text-slate-500 mr-10" type="number" placeholder="Enter a value of 'a'" />
+          <input className="inline-block text-sm text-slate-500" type="number" placeholder="Enter a value of 'b'" />
+        </section>
+        <section>
+          <GraphBox
+            width={800}
+            height={800}
+            gridSize={40}
+            xAxisCount={20}
+            yAxisCount={20}
+          />
+        </section>
+      </main>
     </div>
   )
 }
