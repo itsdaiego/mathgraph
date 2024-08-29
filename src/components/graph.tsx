@@ -8,12 +8,14 @@ type Props = {
   gridSize: number
   xAxisCount: number
   yAxisCount: number
+  slope: number
+  yIntercept: number
 }
 
 const TEXT_OFFSET = 15
 
 const GraphBox = (props: Props) => {
-  const { width, height, gridSize, xAxisCount, yAxisCount } = props
+  const { width, height, gridSize, xAxisCount, yAxisCount, slope, yIntercept } = props
 
   const xCount = (xAxisCount / 2) * -1
   const yCount = (yAxisCount / 2) * -1
@@ -81,9 +83,10 @@ const GraphBox = (props: Props) => {
         <SlopeFunction
           width={width}
           height={height}
-          xCount={xCount}
           gridSize={gridSize}
           xAxisCount={xAxisCount}
+          slope={slope}
+          yIntercept={yIntercept}
         />
         </svg>
     </div>

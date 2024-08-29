@@ -4,30 +4,32 @@ type Props = {
   height: number
   gridSize: number
   xAxisCount: number
-  xCount: number
+  slope: number
+  yIntercept: number
 }
 
 const SlopeFunction = (props: Props) => {
-  const { width, height, xCount, gridSize, xAxisCount } = props
+  const { width, height, gridSize, xAxisCount, slope, yIntercept } = props
+  const xCount = (xAxisCount / 2) * -1
 
   const plotLinearFunction = (x: number) => {
-    const slope = 5
-    const intercept = 5
     // y = mx + b
-    const y = slope * x + intercept
+    const y = slope * x + yIntercept
     // Convert graph coordinates to SVG coordinates
     return height / 2 - y * gridSize
   }
 
   return (
-    <line 
-      x1="0" 
-      y1={plotLinearFunction(xCount)} 
-      x2={width} 
-      y2={plotLinearFunction(xCount + xAxisCount)} 
-      stroke="blue" 
-      strokeWidth={4}
-    />
+    <svg>
+      <line 
+        x1="0" 
+        y1={plotLinearFunction(xCount)} 
+        x2={width} 
+        y2={plotLinearFunction(xCount + xAxisCount)} 
+        stroke="blue" 
+        strokeWidth={4}
+      />
+    </svg>
   ) 
 }
 

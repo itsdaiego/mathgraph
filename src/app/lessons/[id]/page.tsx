@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import GraphBox from "@/components/graph"
 import { URLOptions } from "@/types"
+import SlopeFunction from '@/components/algebra/slope'
 
 export type LessonExercise = {
   description: string
@@ -13,6 +14,9 @@ const LessonListPage = ({ params }: URLOptions) => {
   const [lessonExercise, setLessonExercise] = useState<LessonExercise | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [slope, setSlope] = useState(1)
+  const [yIntercept, setYIntercept] = useState(0)
+
 
   useEffect(() => {
     const fetchLesson = async () => {
@@ -50,6 +54,21 @@ const LessonListPage = ({ params }: URLOptions) => {
     return <div>No lesson data found</div>
   }
 
+  const WIDTH = 800
+  const HEIGHT = 800
+  const X_AXIS_COUNT = 20
+  const GRID_SIZE = 40
+
+  const handleSlopeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value)
+    setSlope(Number(event.target.value))
+  }
+
+  const handleYInterceptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value)
+    setYIntercept(Number(event.target.value))
+  }
+
   return (
     <div className="flex items-center justify-center flex-col">
       <h1 className="text-2xl">{title}</h1>
@@ -59,17 +78,33 @@ const LessonListPage = ({ params }: URLOptions) => {
           <p>{lessonExercise?.description}</p>
 
           <p className="mt-20 mb-2 text-lg">Change the values below to see how the line is plotted on the graph:</p>
-          <input className="inline-block text-sm text-slate-500 mr-10" type="number" placeholder="Enter a value of 'a'" />
-          <input className="inline-block text-sm text-slate-500" type="number" placeholder="Enter a value of 'b'" />
+          <input 
+            className="inline-block text-sm text-slate-500 mr-10" 
+            type="number" 
+            placeholder="Enter a value of 'a'" 
+            value={slope}
+            onChange={handleSlopeChange}
+          />
+          <input 
+            className="inline-block text-sm text-slate-500" 
+            type="number" 
+            placeholder="Enter a value of 'b'" 
+            value={yIntercept}
+            onChange={handleYInterceptChange}
+          />
         </section>
         <section>
           <GraphBox
-            width={800}
-            height={800}
-            gridSize={40}
-            xAxisCount={20}
+            width={WIDTH}
+            height={HEIGHT}
+            gridSize={GRID_SIZE}
+            xAxisCount={X_AXIS_COUNT}
             yAxisCount={20}
-          />
+            slope={slope}
+            yIntercept={yIntercept}
+          >
+          </GraphBox>
+
         </section>
       </main>
     </div>
