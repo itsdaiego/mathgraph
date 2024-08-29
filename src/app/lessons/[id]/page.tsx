@@ -81,14 +81,14 @@ const LessonListPage = ({ params }: URLOptions) => {
           <input 
             className="inline-block text-sm text-slate-500 mr-10" 
             type="number" 
-            placeholder="Enter a value of 'a'" 
+            placeholder="Enter a value of 'm' (slope)" 
             value={slope}
             onChange={handleSlopeChange}
           />
           <input 
             className="inline-block text-sm text-slate-500" 
             type="number" 
-            placeholder="Enter a value of 'b'" 
+            placeholder="Enter a value of 'b' (y-intercept)" 
             value={yIntercept}
             onChange={handleYInterceptChange}
           />

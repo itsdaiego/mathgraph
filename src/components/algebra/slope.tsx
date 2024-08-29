@@ -15,7 +15,7 @@ const SlopeFunction = (props: Props) => {
   const plotLinearFunction = (x: number) => {
     // y = mx + b
     const y = slope * x + yIntercept
-    // Convert graph coordinates to SVG coordinates
+
     return height / 2 - y * gridSize
   }
 
