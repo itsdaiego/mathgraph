@@ -10,7 +10,7 @@ const Home = () => {
   const sessionCookie = cookieStore.get('session_token')
 
   if (sessionCookie) {
-    redirect('/lessons')
+    redirect('/subjects')
   }
 
   return (

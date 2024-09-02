@@ -13,41 +13,41 @@ export type Lesson = {
 }
 
 function LessonPage() {
-  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [subjects, setSubjects] = useState<Lesson[]>([])
 
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/lessons`, {
+    fetch(`http://localhost:3000/api/subjects`, {
       method: 'GET',
     })
     .then(res => {
       if (!res.ok) {
-        throw new Error('Failed to load lessons')
+        throw new Error('Failed to load subjects')
       } else {
         return res.json()
       }
     })
     .then(data => {
-      setLessons(data)
+      setSubjects(data)
     })
     .catch(err => {
       console.error(err)
     })
   }, [])
 
-  if (lessons.length === 0) {
-    return <div>Failed to load lessons</div>
+  if (subjects.length === 0) {
+    return <div>Failed to load subjects</div>
   }
 
   const handleClick = (id: number) => {
-    router.push(`/lessons/${id}`)
+    router.push(`/subjects/${id}`)
   }
 
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {lessons.map(lesson => (
+      {subjects.map(lesson => (
         <div 
           key={lesson.title} className="bg-white rounded-lg shadow-md"
           onClick={() => handleClick(lesson.id)}

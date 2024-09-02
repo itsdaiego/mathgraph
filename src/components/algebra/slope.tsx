@@ -16,7 +16,7 @@ const SlopeFunction = (props: Props) => {
     // y = mx + b
     const y = slope * x + yIntercept
 
-    return height / 2 - y * gridSize
+    return height / 2 - y * (gridSize / 2)
   }
 
   return (

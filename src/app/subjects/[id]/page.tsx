@@ -11,7 +11,7 @@ export type LessonExercise = {
 
 const LessonListPage = ({ params }: URLOptions) => {
   const { id, title } = params
-  const [lessonExercise, setLessonExercise] = useState<LessonExercise | null>(null)
+  const [subjectLesson, setLessonExercise] = useState<LessonExercise | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [slope, setSlope] = useState(1)
@@ -21,7 +21,7 @@ const LessonListPage = ({ params }: URLOptions) => {
   useEffect(() => {
     const fetchLesson = async () => {
       try {
-        const req = await fetch(`http://localhost:3000/api/lessons/${id}?exerciseId=1`, {
+        const req = await fetch(`http://localhost:3000/api/subjects/${id}?exerciseId=1`, {
           method: 'GET',
           credentials: 'include', // Include cookies in the request
         })
@@ -50,7 +50,7 @@ const LessonListPage = ({ params }: URLOptions) => {
     return <div>{error}</div>
   }
 
-  if (!lessonExercise) {
+  if (!subjectLesson) {
     return <div>No lesson data found</div>
   }
 
@@ -75,7 +75,7 @@ const LessonListPage = ({ params }: URLOptions) => {
       <main className="flex flex-row mt-40">
         <section>
           <h2 className="text-xl mb-2">Intro</h2>
-          <p>{lessonExercise?.description}</p>
+          <p>{subjectLesson?.description}</p>
 
           <p className="mt-20 mb-2 text-lg">Change the values below to see how the line is plotted on the graph:</p>
           <input 

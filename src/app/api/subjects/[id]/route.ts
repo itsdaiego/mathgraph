@@ -27,15 +27,17 @@ export async function GET(req: NextRequest, params: { exerciseId: string }) {
     const exerciseId = searchParams.get('exerciseId')
 
     if (!exerciseId) {
-      return NextResponse.json({ error: "No exercise Id provided" }, { status: 400 })
+      return NextResponse.json({ error: "No lessons Id provided" }, { status: 400 })
     }
 
     const { data, error } = await supabase
-      .from("exercises")
+      .from("lessons")
       .select("*")
-      .eq("lesson_id", id)
-      .eq("id", exerciseId)
+      .eq("subject_id", id)
+      // .eq("id", exerciseId)
       .single()
+
+    console.log('data and error', data, error)
 
     if (error) {
       throw error
