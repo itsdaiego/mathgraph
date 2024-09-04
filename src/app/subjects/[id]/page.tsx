@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import GraphBox from "@/components/graph"
+import Renderer from "@/components/renderer"
 import { URLOptions } from "@/types"
 
 export type LessonExercise = {
   description: string
-  title
+  title: string
 }
 
 const LessonListPage = ({ params }: URLOptions) => {
@@ -62,7 +62,7 @@ const LessonListPage = ({ params }: URLOptions) => {
       <h1 className="text-2xl">{title}</h1>
       <main className="flex flex-row mt-40">
         <section>
-          <GraphBox
+          <Renderer
             width={WIDTH}
             height={HEIGHT}
             gridSize={GRID_SIZE}
@@ -70,7 +70,7 @@ const LessonListPage = ({ params }: URLOptions) => {
             yAxisCount={20}
             lesson={lesson}
           >
-          </GraphBox>
+          </Renderer>
 
         </section>
       </main>
