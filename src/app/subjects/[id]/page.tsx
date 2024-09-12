@@ -4,9 +4,16 @@ import { useEffect, useState } from 'react'
 import Renderer from "@/components/renderer"
 import { URLOptions } from "@/types"
 
+type Input = {
+  id: string
+  label: string
+  value: string | number
+}
+
 export type LessonExercise = {
   description: string
   title: string
+  inputs: Input[]
 }
 
 const LessonListPage = ({ params }: URLOptions) => {

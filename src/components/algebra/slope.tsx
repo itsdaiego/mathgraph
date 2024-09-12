@@ -1,20 +1,27 @@
+import { LessonExercise } from "@/app/subjects/[id]/page"
 
 type Props = {
   width: number
   height: number
   gridSize: number
   xAxisCount: number
-  slope: number
-  yIntercept: number
+  fields: LessonExercise['inputs']
 }
 
 const SlopeFunction = (props: Props) => {
-  const { width, height, gridSize, xAxisCount, slope, yIntercept } = props
+  const { width, height, gridSize, xAxisCount, fields } = props
   const xCount = (xAxisCount / 2) * -1
+
+  const slope = fields.find(field => field.id === 'slope')?.value
+  const yIntercept = fields.find(field => field.id === 'yIntercept')?.value
+
+  if (slope === undefined || yIntercept === undefined) {
+    return <svg></svg>
+  }
 
   const plotLinearFunction = (x: number) => {
     // y = mx + b
-    const y = slope * x + yIntercept
+    const y = Number(slope) * x + Number(yIntercept)
 
     return height / 2 - y * (gridSize / 2)
   }

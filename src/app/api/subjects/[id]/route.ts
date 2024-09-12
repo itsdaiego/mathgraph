@@ -34,10 +34,8 @@ export async function GET(req: NextRequest, params: { exerciseId: string }) {
       .from("lessons")
       .select("*")
       .eq("subject_id", id)
-      // .eq("id", exerciseId)
+      .eq("id", exerciseId)
       .single()
-
-    console.log('data and error', data, error)
 
     if (error) {
       throw error

@@ -1,5 +1,5 @@
 'use client'
-import { ComponentType, useState } from "react"
+import { useState } from "react"
 import dynamic from 'next/dynamic'
 import { LessonExercise } from "@/app/subjects/[id]/page"
 import GraphBox from "@/components/graph"
@@ -22,13 +22,23 @@ const COMPONENT_MAP: Record<string, any> = {
 
 const Renderer = (props: Props) => {
   const { width, height, gridSize, xAxisCount, yAxisCount, lesson } = props
-  const [slope, setSlope] = useState(1)
-  const [yIntercept, setYIntercept] = useState(0)
+  const initialFields = lesson.inputs.map(field => ({
+    id: field.id,
+    label: field.label,
+    value: field.value
+  })) as LessonExercise['inputs']
 
+  const [inputFields, setInputFields] = useState<LessonExercise['inputs']>(initialFields)
+
+  const handleInputChange = (id: string, value: number) => {
+    setInputFields(fields => 
+      fields.map(field => 
+        field.id === id ? { ...field, value } : field
+      )
+    );
+  };
 
   const GraphComponent = COMPONENT_MAP[lesson.title]
-  
-  const capitalizedTitle = lesson?.title.charAt(0).toUpperCase() + lesson.title.slice(1).replace(/-/g, ' ')
 
   return (
     <div className="flex flex-row">
@@ -36,14 +46,11 @@ const Renderer = (props: Props) => {
         <>
           <GraphMetadata 
             lesson={lesson}
-            slope={slope}
-            yIntercept={yIntercept}
-            onSlopeChange={setSlope}
-            onYInterceptChange={setYIntercept}
+            inputFields={inputFields}
+            onInputChange={handleInputChange}
           />
           <div className="flex flex-col text-center">
             <svg width={width} height={height} style={{ border: '1px solid black' }}>
-
               <GraphBox
                 width={width}
                 height={height}
@@ -56,8 +63,7 @@ const Renderer = (props: Props) => {
                 height={height}
                 gridSize={gridSize}
                 xAxisCount={xAxisCount}
-                slope={slope}
-                yIntercept={yIntercept}
+                fields={inputFields}
               />
             </svg>
           </div>
