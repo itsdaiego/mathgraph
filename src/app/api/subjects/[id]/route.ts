@@ -7,7 +7,7 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
 
 const supabase = createClient(supabaseURL, supabaseAnonKey)
 
-export async function GET(req: NextRequest, params: { exerciseId: string }) {
+export async function GET(req: NextRequest, params: { lessonId: string }) {
   try {
     const cookieStore = cookies()
     const sessionCookies = cookieStore.get('session_token')
@@ -24,9 +24,9 @@ export async function GET(req: NextRequest, params: { exerciseId: string }) {
     }
 
     const { searchParams } = new URL(req.url)
-    const exerciseId = searchParams.get('exerciseId')
+    const lessonId = searchParams.get('lessonId')
 
-    if (!exerciseId) {
+    if (!lessonId) {
       return NextResponse.json({ error: "No lessons Id provided" }, { status: 400 })
     }
 
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, params: { exerciseId: string }) {
       .from("lessons")
       .select("*")
       .eq("subject_id", id)
-      .eq("id", exerciseId)
+      .eq("id", lessonId)
       .single()
 
     if (error) {

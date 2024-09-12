@@ -3,49 +3,11 @@
 import { useEffect, useState } from 'react'
 import Renderer from "@/components/renderer"
 import { URLOptions } from "@/types"
-
-type Input = {
-  id: string
-  label: string
-  value: string | number
-}
-
-export type LessonExercise = {
-  description: string
-  title: string
-  inputs: Input[]
-}
+import { useSubjectLesson } from '@/hooks/useSubjectLesson'
 
 const LessonListPage = ({ params }: URLOptions) => {
   const { id, title } = params
-  const [lesson, setLessonExercise] = useState<LessonExercise | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-
-  useEffect(() => {
-    const fetchLesson = async () => {
-      try {
-        const req = await fetch(`http://localhost:3000/api/subjects/${id}?exerciseId=1`, {
-          method: 'GET',
-          credentials: 'include', // Include cookies in the request
-        })
-
-        if (!req.ok) {
-          throw new Error('Failed to load lesson')
-        }
-
-        const data = await req.json() as LessonExercise
-        setLessonExercise(data)
-      } catch (err: any) {
-        setError(err?.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchLesson()
-  }, [id])
+  const { lesson, loading, error } = useSubjectLesson(id)
 
   if (loading) {
     return <div>Loading...</div>
