@@ -12,17 +12,17 @@ const QuadraticFunction = (props: Props) => {
   const { width, height, gridSize, xAxisCount, fields } = props
   const xStart = (xAxisCount / 2) * -1
 
-  const a = Number(fields.find(field => field.id === 'a')?.value || 0)
-  const b = Number(fields.find(field => field.id === 'b')?.value || 0)
-  const c = Number(fields.find(field => field.id === 'c')?.value || 0)
+  const coefficient = fields.find(field => field.id === 'a')?.value
+  const linearTerm = fields.find(field => field.id === 'b')?.value
+  const constant = fields.find(field => field.id === 'c')?.value
 
-  if (a === undefined || b === undefined || c === undefined) {
+  if (coefficient === undefined || linearTerm === undefined || constant === undefined) {
     return <svg></svg>
   }
 
   const plotQuadraticFunction = (x: number) => {
     // y = ax^2 + bx + c
-    const y = a * x * x + b * x + c
+    const y = coefficient * x * x + linearTerm * x + constant
 
     const middle = height / 2
     const scale = gridSize / 2
