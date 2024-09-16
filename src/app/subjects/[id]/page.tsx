@@ -1,50 +1,52 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Renderer from "@/components/renderer"
-import { URLOptions } from "@/types"
 import { useSubjectLesson } from '@/hooks/useSubjectLesson'
+import { URLOptions } from "@/types"
 
-const LessonListPage = ({ params }: URLOptions) => {
-  const { id, title } = params
-  const { lesson, loading, error } = useSubjectLesson(id)
+const LessonPage = ({ params }: URLOptions) => {
+  const { id: subjectId } = params
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const lessonId = searchParams.get('lessonId') || '1'
+  const shouldUpdateProgress = searchParams.get('shouldUpdateProgress') === 'true'
+  const { lesson, loading, error, nextLessonId } = useSubjectLesson(subjectId, lessonId, shouldUpdateProgress)
 
-  if (loading) {
-    return <div>Loading...</div>
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>{error}</div>
+  if (!lesson) return <div>No lesson data found</div>
+
+  const handleNextLesson = () => {
+
+    if (nextLessonId) {
+      router.push(`/subjects/${subjectId}?lessonId=${nextLessonId}&shouldUpdateProgress=true`)
+    }
   }
-
-  if (error) {
-    return <div>{error}</div>
-  }
-
-  if (!lesson) {
-    return <div>No lesson data found</div>
-  }
-
-  const WIDTH = 800
-  const HEIGHT = 800
-  const X_AXIS_COUNT = 20
-  const GRID_SIZE = 40
 
   return (
     <div className="flex items-center justify-center flex-col">
-      <h1 className="text-2xl">{title}</h1>
+      <h1 className="text-2xl">{lesson.title}</h1>
       <main className="flex flex-row mt-40">
-        <section>
-          <Renderer
-            width={WIDTH}
-            height={HEIGHT}
-            gridSize={GRID_SIZE}
-            xAxisCount={X_AXIS_COUNT}
-            yAxisCount={20}
-            lesson={lesson}
-          >
-          </Renderer>
-
-        </section>
+        <Renderer
+          width={800}
+          height={800}
+          gridSize={40}
+          xAxisCount={20}
+          yAxisCount={20}
+          lesson={lesson}
+        />
       </main>
+      {nextLessonId && (
+        <button
+          onClick={handleNextLesson}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Next Lesson
+        </button>
+      )}
     </div>
   )
 }
 
-export default LessonListPage
+export default LessonPage

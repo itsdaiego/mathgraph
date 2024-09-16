@@ -30,6 +30,7 @@ export async function GET(req: NextRequest, params: { subjectId: number }) {
       .select("*")
       .eq("profile_id", user.id)
       .eq("subject_id", subjectId)
+      .single()
 
     if (error) {
       throw error
@@ -54,7 +55,42 @@ export async function GET(req: NextRequest, params: { subjectId: number }) {
       data = createdData
     }
 
-    console.log("Progression", data)
+    return NextResponse.json({ ...data }, { status: 200 })
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 })
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const cookieStore = cookies()
+    const sessionToken = cookieStore.get('session_token')
+
+    if (!sessionToken) {
+      return NextResponse.json({ error: "Session token not found or expired" }, { status: 401 })
+    }
+
+    const { data: { user } } = await supabase.auth.getUser(sessionToken.value)
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 401 })
+    }
+
+    const { subjectId, lessonId } = await req.json()
+
+    const { data, error } = await supabase
+      .from("progression")
+      .update({
+        lesson_id: lessonId
+      })
+      .eq('profile_id', user.id)
+      .eq('subject_id', subjectId)
+      .select()
+
+    if (error) {
+      console.log(error)
+      throw error
+    }
 
     return NextResponse.json({ ...data[0] }, { status: 200 })
   } catch (error) {

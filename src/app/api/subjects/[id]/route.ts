@@ -1,19 +1,18 @@
-import { createClient } from "@supabase/supabase-js"
-import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
+import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
+import supabase from '@/lib/db'
 
-const supabaseURL = process.env.SUPABASE_URL as string
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY as string
-
-const supabase = createClient(supabaseURL, supabaseAnonKey)
-
-export async function GET(req: NextRequest, params: { lessonId: string }) {
+export async function GET(req: NextRequest, { params }: { params: { lessonId: string } }) {
   try {
-    const cookieStore = cookies()
-    const sessionCookies = cookieStore.get('session_token')
+    if (!cookies().get('session_token')) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    }
 
-    if (!sessionCookies) {
-      return NextResponse.json({ error: "Session token not found is epxired" }, { status: 401 })
+    const { searchParams } = new URL(req.url)
+    const lessonId = searchParams.get('lessonId')
+
+    if (!lessonId) {
+      return NextResponse.json({ error: 'Lesson ID is required' }, { status: 400 })
     }
 
     const path = new URL(req.url).pathname?.split("/")
@@ -23,26 +22,32 @@ export async function GET(req: NextRequest, params: { lessonId: string }) {
       return NextResponse.json({ error: "No lesson Id provided" }, { status: 400 })
     }
 
-    const { searchParams } = new URL(req.url)
-    const lessonId = searchParams.get('lessonId')
-
-    if (!lessonId) {
-      return NextResponse.json({ error: "No lessons Id provided" }, { status: 400 })
-    }
-
     const { data, error } = await supabase
-      .from("lessons")
-      .select("*")
-      .eq("subject_id", id)
-      .eq("id", lessonId)
-      .single()
+      .from('lessons')
+      .select('*')
+      .eq('subject_id', id)
+      .gte('id', lessonId)
+      .order('id')
+      .limit(2)
 
+    
     if (error) {
-      throw error
+      return NextResponse.json({ error: 'Failed to fetch lessons' }, { status: 500 })
     }
 
-    return NextResponse.json({ ...data }, { status: 200 })
-  } catch (error) {
-    NextResponse.json({ error }, { status: 500 })
+    if (data.length === 0) {
+      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
+    }
+
+    const [currentLesson, nextLesson] = data
+
+    const response = {
+      lesson: currentLesson,
+      nextLessonId: nextLesson?.id || null
+    }
+
+    return NextResponse.json(response, { status: 200 })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

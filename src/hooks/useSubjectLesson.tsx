@@ -6,6 +6,7 @@ export type Progression = {
 }
 
 export type Lesson = {
+  id: number
   description: string
   title: string
   inputs: Input[]
@@ -17,16 +18,46 @@ type Input = {
   value: string | number
 }
 
-
-export const useSubjectLesson = (id: string) => {
+export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpdateProgress = false) => {
   const [lesson, setLesson] = useState<Lesson | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [nextLessonId, setNextLessonId] = useState<number | null>(null)
+
+  console.log('shouldUpdateProgress', shouldUpdateProgress)
 
   useEffect(() => {
+    if (shouldUpdateProgress) {
+      const updateProgress = async () => {
+        try {
+          const progressionReq = await fetch('http://localhost:3000/api/progression', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              subjectId,
+              lessonId: lessonId,
+            }),
+          })
+
+          console.log(progressionReq)
+
+          if (!progressionReq.ok) {
+            throw new Error('Failed to update progression')
+          }
+        } catch (err: any) {
+          setError(err?.message)
+        }
+      }
+
+      updateProgress()
+    }
+
     const fetchData = async () => {
       try {
-        const progressionReq = await fetch(`http://localhost:3000/api/progression?subjectId=${id}`, {
+        const progressionReq = await fetch(`http://localhost:3000/api/progression?subjectId=${subjectId}`, {
           method: 'GET',
           credentials: 'include',
         })
@@ -37,7 +68,7 @@ export const useSubjectLesson = (id: string) => {
 
         const progressionData = await progressionReq.json()
 
-        const lessonReq = await fetch(`http://localhost:3000/api/subjects/${id}?lessonId=${progressionData.lesson_id}`, {
+        const lessonReq = await fetch(`http://localhost:3000/api/subjects/${subjectId}?lessonId=${progressionData.lesson_id}`, {
           method: 'GET',
           credentials: 'include',
         })
@@ -46,8 +77,10 @@ export const useSubjectLesson = (id: string) => {
           throw new Error('Failed to load lesson')
         }
 
-        const lessonData = await lessonReq.json() as Lesson
-        setLesson(lessonData)
+        const lessonData = await lessonReq.json()
+        setLesson(lessonData.lesson)
+        setNextLessonId(lessonData.nextLessonId)
+
       } catch (err: any) {
         setError(err?.message)
       } finally {
@@ -56,7 +89,7 @@ export const useSubjectLesson = (id: string) => {
     }
 
     fetchData()
-  }, [id])
+  }, [lessonId, subjectId, shouldUpdateProgress])
 
-  return { lesson, loading, error }
+  return { lesson, loading, error, nextLessonId }
 }

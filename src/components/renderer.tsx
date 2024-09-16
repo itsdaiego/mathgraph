@@ -17,7 +17,8 @@ type Props = {
 // TODO: add types
 // const COMPONENT_MAP: Record<string, Partial<GraphComponentProps>> = {
 const COMPONENT_MAP: Record<string, any> = {
-  'slope-function': dynamic(() => import('@/components/algebra/slope'))
+  'slope-function': dynamic(() => import('@/components/algebra/slope')),
+  'quadratic-function': dynamic(() => import('@/components/algebra/quadratic'))
 }
 
 const Renderer = (props: Props) => {
@@ -41,41 +42,35 @@ const Renderer = (props: Props) => {
   const GraphComponent = COMPONENT_MAP[lesson.title]
 
   return (
-    <>
-      <div className="flex flex-row">
-        {GraphComponent && (
-          <>
-            <GraphMetadata 
-              lesson={lesson}
-              inputFields={inputFields}
-              onInputChange={handleInputChange}
-            />
-            <div className="flex flex-col text-center">
-              <svg width={width} height={height} style={{ border: '1px solid black' }}>
-                <GraphBox
-                  width={width}
-                  height={height}
-                  gridSize={gridSize}
-                  xAxisCount={xAxisCount}
-                  yAxisCount={yAxisCount}
-                />
-                <GraphComponent
-                  width={width}
-                  height={height}
-                  gridSize={gridSize}
-                  xAxisCount={xAxisCount}
-                  fields={inputFields}
-                />
-              </svg>
-            </div>
-          </>
-        )}
-      </div>
-      <div className="flex flex-row justify-between mt-4">
-        <button className="px-4 py-2 bg-sky-500 text-white rounded">Previous</button>
-        <button className="px-4 py-2 bg-sky-500 text-white rounded">Next</button>
-      </div>
-    </>
+    <div className="flex flex-row">
+      {GraphComponent && (
+        <>
+          <GraphMetadata 
+            lesson={lesson}
+            inputFields={inputFields}
+            onInputChange={handleInputChange}
+          />
+          <div className="flex flex-col text-center">
+            <svg width={width} height={height} style={{ border: '1px solid black' }}>
+              <GraphBox
+                width={width}
+                height={height}
+                gridSize={gridSize}
+                xAxisCount={xAxisCount}
+                yAxisCount={yAxisCount}
+              />
+              <GraphComponent
+                width={width}
+                height={height}
+                gridSize={gridSize}
+                xAxisCount={xAxisCount}
+                fields={inputFields}
+              />
+            </svg>
+          </div>
+        </>
+      )}
+    </div>
   )
 }
 
