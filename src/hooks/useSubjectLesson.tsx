@@ -23,8 +23,7 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [nextLessonId, setNextLessonId] = useState<number | null>(null)
-
-  console.log('shouldUpdateProgress', shouldUpdateProgress)
+  const [prevLessonId, setPrevLessonId] = useState<number | null>(null)
 
   useEffect(() => {
     if (shouldUpdateProgress) {
@@ -80,6 +79,7 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
         const lessonData = await lessonReq.json()
         setLesson(lessonData.lesson)
         setNextLessonId(lessonData.nextLessonId)
+        setPrevLessonId(lessonData.prevLessonId)
 
       } catch (err: any) {
         setError(err?.message)
@@ -91,5 +91,5 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
     fetchData()
   }, [lessonId, subjectId, shouldUpdateProgress])
 
-  return { lesson, loading, error, nextLessonId }
+  return { lesson, loading, error, nextLessonId, prevLessonId }
 }

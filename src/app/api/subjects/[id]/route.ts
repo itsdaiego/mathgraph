@@ -26,11 +26,8 @@ export async function GET(req: NextRequest, { params }: { params: { lessonId: st
       .from('lessons')
       .select('*')
       .eq('subject_id', id)
-      .gte('id', lessonId)
       .order('id')
-      .limit(2)
 
-    
     if (error) {
       return NextResponse.json({ error: 'Failed to fetch lessons' }, { status: 500 })
     }
@@ -39,11 +36,15 @@ export async function GET(req: NextRequest, { params }: { params: { lessonId: st
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
     }
 
-    const [currentLesson, nextLesson] = data
+    const currentLessonIndex = data.findIndex(lesson => lesson.id === parseInt(lessonId))
+    const currentLesson = data[currentLessonIndex]
+    const nextLesson = data[currentLessonIndex + 1]
+    const prevLesson = data[currentLessonIndex - 1]
 
     const response = {
       lesson: currentLesson,
-      nextLessonId: nextLesson?.id || null
+      nextLessonId: nextLesson?.id || null,
+      prevLessonId: prevLesson?.id || null
     }
 
     return NextResponse.json(response, { status: 200 })
