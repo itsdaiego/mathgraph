@@ -25,6 +25,8 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
   const [nextLessonId, setNextLessonId] = useState<number | null>(null)
   const [prevLessonId, setPrevLessonId] = useState<number | null>(null)
 
+  console.log('trigger')
+
   useEffect(() => {
     if (shouldUpdateProgress) {
       const updateProgress = async () => {
@@ -38,6 +40,7 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
             body: JSON.stringify({
               subjectId,
               lessonId: lessonId,
+
             }),
           })
 
@@ -66,6 +69,9 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
         }
 
         const progressionData = await progressionReq.json()
+
+
+        console.log('progressionData', progressionData)
 
         const lessonReq = await fetch(`http://localhost:3000/api/subjects/${subjectId}?lessonId=${progressionData.lesson_id}`, {
           method: 'GET',

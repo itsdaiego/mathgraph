@@ -12,8 +12,8 @@ const SlopeFunction = (props: Props) => {
   const { width, height, gridSize, xAxisCount, fields } = props
   const xStart = (xAxisCount / 2) * -1
 
-  const slope = fields.find(field => field.id === 'slope')?.value
-  const yIntercept = fields.find(field => field.id == 'yIntercept')?.value
+  const slope = fields.find(field => field.id === 'm')?.value
+  const yIntercept = fields.find(field => field.id == 'b')?.value
 
   if (slope === undefined || yIntercept === undefined) {
     return <svg></svg>

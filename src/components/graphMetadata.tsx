@@ -2,9 +2,9 @@ import React from 'react'
 import { LessonExercise } from "@/app/subjects/[id]/page"
 
 type Props = {
-  lesson: LessonExercise;
-  inputFields: LessonExercise['inputs'];
-  onInputChange: (id: string, value: number) => void;
+  lesson: LessonExercise
+  inputFields: LessonExercise['inputs']
+  onInputChange: (id: string, value: number) => void
 }
 
 const GraphMetadata: React.FC<Props> = ({ 
@@ -13,10 +13,10 @@ const GraphMetadata: React.FC<Props> = ({
   onInputChange
 }) => {
   const handleInputChange = (id: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    onInputChange(id, Number(event.target.value));
-  };
+    onInputChange(id, Number(event.target.value))
+  }
 
-  const capitalizedTitle = lesson?.title.charAt(0).toUpperCase() + lesson.title.slice(1).replace(/-/g, ' ');
+  const capitalizedTitle = lesson?.title.charAt(0).toUpperCase() + lesson.title.slice(1).replace(/-/g, ' ')
 
   const renderEquation = () => {
     if (lesson?.title === 'slope-function') {
@@ -37,7 +37,7 @@ const GraphMetadata: React.FC<Props> = ({
             </React.Fragment>
           ))}
         </div>
-      );
+      )
     } else if (lesson?.title === 'quadratic-function') {
       return (
         <div className="text-lg flex items-center">
@@ -57,9 +57,9 @@ const GraphMetadata: React.FC<Props> = ({
             </React.Fragment>
           ))}
         </div>
-      );
+      )
     }
-  };
+  }
 
   return (
     <section className="w-1/3 mx-8">

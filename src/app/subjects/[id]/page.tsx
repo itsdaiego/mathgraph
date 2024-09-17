@@ -36,7 +36,7 @@ const LessonPage = ({ params }: URLOptions) => {
 
   const handlePreviousLesson = () => {
     if (prevLessonId) {
-      router.push(`/subjects/${subjectId}?lessonId=${prevLessonId}&shouldUpdateProgress=false`)
+      router.push(`/subjects/${subjectId}?lessonId=${prevLessonId}&shouldUpdateProgress=true`)
     }
   }
 
