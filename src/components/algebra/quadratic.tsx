@@ -20,8 +20,6 @@ const QuadraticFunction = (props: Props) => {
     return <svg></svg>
   }
   
-  console.log({ coefficient, slope, yIntercept })
-
   const plotQuadraticFunction = (x: number) => {
     // y = ax^2 + bx + c
     const y = coefficient * Math.pow(x, 2) + slope * x + yIntercept

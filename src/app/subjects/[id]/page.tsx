@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Renderer from "@/components/renderer"
 import { useSubjectLesson } from '@/hooks/useSubjectLesson'
 import { URLOptions } from "@/types"
-import { useEffect } from 'react'
 
 export type LessonExercise = {
   id: number

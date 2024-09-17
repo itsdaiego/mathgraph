@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import dynamic from 'next/dynamic'
 import { LessonExercise } from "@/app/subjects/[id]/page"
 import GraphBox from "@/components/graph"
@@ -23,21 +23,28 @@ const COMPONENT_MAP: Record<string, any> = {
 
 const Renderer = (props: Props) => {
   const { width, height, gridSize, xAxisCount, yAxisCount, lesson } = props
-  const initialFields = lesson.inputs.map(field => ({
-    id: field.id,
-    label: field.label,
-    value: field.value
-  })) as LessonExercise['inputs']
+  useEffect(() => {
+    setInputFields(lesson.inputs.map(field => ({
+      id: field.id,
+      label: field.label,
+      value: field.value
+    })));
+  }, [lesson])
 
-  const [inputFields, setInputFields] = useState<LessonExercise['inputs']>(initialFields)
+
+  const [inputFields, setInputFields] = useState<LessonExercise['inputs'] | null>(null)
 
   const handleInputChange = (id: string, value: number) => {
-    setInputFields(fields => 
-      fields.map(field => 
+    setInputFields(fields => {
+      if (!fields) {
+        return null
+      }
+
+      return fields.map(field => 
         field.id === id ? { ...field, value } : field
       )
-    );
-  };
+    })
+  }
 
   const GraphComponent = COMPONENT_MAP[lesson.title]
 

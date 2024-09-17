@@ -66,7 +66,7 @@ const GraphMetadata: React.FC<Props> = ({
       <h2 className="text-xl mb-2">{capitalizedTitle}</h2>
       <p>{lesson?.description}</p>
       <p className="mt-20 mb-2 text-lg">Change the values below to see how the function is plotted on the graph:</p>
-      {renderEquation()}
+      {inputFields && renderEquation()}
     </section>
   )
 }
