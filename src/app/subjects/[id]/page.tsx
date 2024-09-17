@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Renderer from "@/components/renderer"
 import { useSubjectLesson } from '@/hooks/useSubjectLesson'
 import { URLOptions } from "@/types"
+import { useEffect } from 'react'
 
 export type LessonExercise = {
   id: number
@@ -22,6 +23,8 @@ const LessonPage = ({ params }: URLOptions) => {
   const searchParams = useSearchParams()
   const lessonId = searchParams.get('lessonId') || '1'
   const shouldUpdateProgress = searchParams.get('shouldUpdateProgress') === 'true'
+  console.log('lesson id ', lessonId)
+  
   const { lesson, loading, error, nextLessonId, prevLessonId } = useSubjectLesson(subjectId, lessonId, shouldUpdateProgress)
 
   if (loading) return <div>Loading...</div>

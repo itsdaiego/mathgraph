@@ -19,6 +19,8 @@ const QuadraticFunction = (props: Props) => {
   if (coefficient === undefined || slope === undefined || yIntercept === undefined) {
     return <svg></svg>
   }
+  
+  console.log({ coefficient, slope, yIntercept })
 
   const plotQuadraticFunction = (x: number) => {
     // y = ax^2 + bx + c
