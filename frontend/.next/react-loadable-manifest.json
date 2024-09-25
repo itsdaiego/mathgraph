@@ -1,0 +1,14 @@
+{
+  "components/renderer.tsx -> @/components/algebra/quadratic": {
+    "id": "components/renderer.tsx -> @/components/algebra/quadratic",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_algebra_quadratic_tsx.js"
+    ]
+  },
+  "components/renderer.tsx -> @/components/algebra/slope": {
+    "id": "components/renderer.tsx -> @/components/algebra/slope",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_algebra_slope_tsx.js"
+    ]
+  }
+}
