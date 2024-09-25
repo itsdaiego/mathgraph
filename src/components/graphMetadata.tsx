@@ -19,46 +19,25 @@ const GraphMetadata: React.FC<Props> = ({
   const capitalizedTitle = lesson?.title.charAt(0).toUpperCase() + lesson.title.slice(1).replace(/-/g, ' ')
 
   const renderEquation = () => {
-    if (lesson?.title === 'slope-function') {
-      return (
-        <div className="text-lg flex items-center">
-          <span>y = </span>
-          {inputFields.map((field, index) => (
-            <React.Fragment key={field.id}>
-              {index > 0 && <span> + </span>}
-              <input 
-                className="w-16 mx-2 px-2 py-1 border rounded text-sm text-slate-500"
-                type="number" 
-                alt={field.label}
-                value={field.value}
-                onChange={handleInputChange(field.id)}
-              />
-              {index === 0 && <span>x</span>}
-            </React.Fragment>
-          ))}
-        </div>
-      )
-    } else if (lesson?.title === 'quadratic-function') {
-      return (
-        <div className="text-lg flex items-center">
-          <span>y = </span>
-          {inputFields.map((field, index) => (
-            <React.Fragment key={field.id}>
-              {index > 0 && <span> + </span>}
-              <input 
-                className="w-16 mx-2 px-2 py-1 border rounded text-sm text-slate-500"
-                type="number" 
-                alt={field.label}
-                value={field.value}
-                onChange={handleInputChange(field.id)}
-              />
-              {index === 0 && <span>x²</span>}
-              {index === 1 && <span>x</span>}
-            </React.Fragment>
-          ))}
-        </div>
-      )
-    }
+    return (
+      <div className="text-lg flex items-center flex-wrap">
+        <span>y = </span>
+        {inputFields.map((field, index) => (
+          <React.Fragment key={field.id}>
+            {index > 0 && <span className="mx-1">+</span>}
+            <input 
+              className="w-16 mx-1 px-2 py-1 border rounded text-sm text-slate-500"
+              type="number" 
+              alt={field.label}
+              value={field.value}
+              onChange={handleInputChange(field.id)}
+            />
+            {field.id === 'a' && <span>x²</span>}
+            {(field.id === 'm' || field.id === 'b') && <span>x</span>}
+          </React.Fragment>
+        ))}
+      </div>
+    )
   }
 
   return (

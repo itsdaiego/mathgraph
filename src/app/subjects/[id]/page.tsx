@@ -14,6 +14,7 @@ export type LessonExercise = {
     label: string
     value: string | number
   }[]
+  formula: string
 }
 
 const LessonPage = ({ params }: URLOptions) => {

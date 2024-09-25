@@ -21,6 +21,18 @@ const COMPONENT_MAP: Record<string, any> = {
   'quadratic-function': dynamic(() => import('@/components/algebra/quadratic'))
 }
 
+const INPUT_MAP: Record<string, any> = {
+  'slope-function': [
+    { id: 'm', label: 'Slope' },
+    { id: 'b', label: 'Y-intercept' }
+  ],
+  'quadratic-function': [
+    { id: 'a', label: 'a' },
+    { id: 'b', label: 'b' },
+    { id: 'c', label: 'c' }
+  ]
+}
+
 const Renderer = (props: Props) => {
   const { width, height, gridSize, xAxisCount, yAxisCount, lesson } = props
   useEffect(() => {
@@ -28,9 +40,8 @@ const Renderer = (props: Props) => {
       id: field.id,
       label: field.label,
       value: field.value
-    })));
+    })))
   }, [lesson])
-
 
   const [inputFields, setInputFields] = useState<LessonExercise['inputs'] | null>(null)
 
