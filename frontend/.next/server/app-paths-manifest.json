@@ -1,9 +1,0 @@
-{
-  "/api/profile/route": "app/api/profile/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/api/subjects/route": "app/api/subjects/route.js",
-  "/api/login/route": "app/api/login/route.js",
-  "/subjects/[id]/page": "app/subjects/[id]/page.js",
-  "/subjects/page": "app/subjects/page.js",
-  "/login/page": "app/login/page.js"
-}

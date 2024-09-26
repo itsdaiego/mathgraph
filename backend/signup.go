@@ -1,12 +1,12 @@
 package main
 
 import (
-  "encoding/json"
-  "net/http"
-  "os"
+	"encoding/json"
+	"log"
+	"net/http"
 
-  "github.com/gorilla/mux"
-  "github.com/nedpals/supabase-go"
+	"github.com/joho/godotenv"
+	"github.com/supabase-community/gotrue-go/types"
 )
 
 type SignupRequest struct {
@@ -15,49 +15,76 @@ type SignupRequest struct {
   Username string `json:"username"`
 }
 
+type Profile struct {
+  ID       string `json:"id"`
+  Username string `json:"username"`
+}
+
+type SignupWithData struct {
+  Email    string `json:"email"`
+  Password string `json:"password"`
+  Data     map[string]interface{} `json:"data"`
+}
+
+type ErrorResponse struct {
+  Error string `json:"error"`
+}
+
+type SuccessResponse struct {
+  Message string `json:"message"`
+}
+
 func signupHandler(w http.ResponseWriter, r *http.Request) {
-  // Parse the request body
-  var signupReq SignupRequest
-  err := json.NewDecoder(r.Body).Decode(&signupReq)
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	var signupReq SignupRequest
+	err = json.NewDecoder(r.Body).Decode(&signupReq)
+	if err != nil {
+		log.Printf("Error decoding request body: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: "Invalid request body"})
+		return
+	}
+
+  supabaseClient, err := createSupabaseClient()
   if err != nil {
-    http.Error(w, "Invalid request body", http.StatusBadRequest)
+    w.WriteHeader(http.StatusInternalServerError)
+    json.NewEncoder(w).Encode(ErrorResponse{Error: "Error creating Supabase client"})
     return
   }
 
-  // Initialize Supabase client
-  supabaseUrl := os.Getenv("SUPABASE_URL")
-  supabaseKey := os.Getenv("SUPABASE_KEY")
-  supabaseClient := supabase.CreateClient(supabaseUrl, supabaseKey)
-
-  // Sign up the user
-  user, err := supabaseClient.Auth.SignUp(supabase.UserCredentials{
+  user, err := supabaseClient.Auth.Signup(types.SignupRequest{
     Email:    signupReq.Email,
     Password: signupReq.Password,
+    Data: map[string]interface{}{
+        "username": signupReq.Username,
+      },
   })
+
   if err != nil {
-    http.Error(w, "Error signing up user", http.StatusInternalServerError)
+    log.Printf("Error signing up user: %v", err)
+    w.WriteHeader(http.StatusInternalServerError)
+    json.NewEncoder(w).Encode(ErrorResponse{Error: "Error signing up user"})
     return
   }
 
-  // Create a profile for the user
+  var profile Profile
+
   _, err = supabaseClient.From("profiles").Insert(map[string]interface{}{
     "id":       user.ID,
     "username": signupReq.Username,
-  })
-  if err != nil {
-    http.Error(w, "Error creating user profile", http.StatusInternalServerError)
+  }, false, `ON CONFLICT DO NOTHING`, `*`, `count`).ExecuteTo(&profile)
+
+  if err != nil && err.Error() != "EOF" {
+    log.Printf("Error creating user profile: %v", err)
+    w.WriteHeader(http.StatusInternalServerError)
+    json.NewEncoder(w).Encode(ErrorResponse{Error: "Error creating user profile"})
     return
   }
 
-  // Return success response
   w.WriteHeader(http.StatusCreated)
-  json.NewEncoder(w).Encode(map[string]string{"message": "User signed up successfully"})
-}
-
-func main() {
-  r := mux.NewRouter()
-  r.HandleFunc("/api/signup", signupHandler).Methods("POST")
-  // ... other routes ...
-
-  http.ListenAndServe(":8080", r)
+  json.NewEncoder(w).Encode(SuccessResponse{Message: "User signed up successfully"})
 }

@@ -1,14 +1,15 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
+
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/nedpals/supabase-go"
+	"github.com/joho/godotenv"
 )
 
 type LoginRequest struct {
@@ -16,29 +17,31 @@ type LoginRequest struct {
   Password string `json:"password"`
 }
 
+
 func loginHandler(w http.ResponseWriter, r *http.Request) {
+  err := godotenv.Load()
+  if err != nil{
+    log.Fatal("Error loading .env file")
+  }
+
   var loginReq LoginRequest
 
-  err := json.NewDecoder(r.Body).Decode(&loginReq)
+  err = json.NewDecoder(r.Body).Decode(&loginReq)
   if err != nil {
+    log.Printf("Error decoding login request body: %v", err)
     http.Error(w, "Invalid request body", http.StatusBadRequest)
     return
   }
 
-  supabaseUrl := os.Getenv("SUPABASE_URL")
-  supabaseKey := os.Getenv("SUPABASE_ANON_KEY")
-  supabaseClient := supabase.CreateClient(supabaseUrl, supabaseKey)
+  supabaseClient, err := createSupabaseClient()
 
-  context := context.Background()
-
-  user, err := supabaseClient.Auth.SignIn(context, supabase.UserCredentials{
-    Email:    loginReq.Email,
-    Password: loginReq.Password,
-  })
+  user, err := supabaseClient.Auth.SignInWithEmailPassword(loginReq.Email, loginReq.Password)
   if err != nil {
+    log.Printf("Error logging in user: %v", err)
     http.Error(w, "Error logging in user", http.StatusUnauthorized)
     return
   }
+
 
   token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
     "sub": user.User.ID,
@@ -49,9 +52,11 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
   tokenString, err := token.SignedString([]byte(jwtSecret))
   if err != nil {
+    log.Printf("Error creating JWT token: %v", err)
     http.Error(w, "Error creating JWT token", http.StatusInternalServerError)
     return
   }
+
 
   http.SetCookie(w, &http.Cookie{
     Name:     "session_token",
@@ -59,10 +64,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
     Path:     "/",
     MaxAge:   60 * 60 * 24 * 7, // 7 days
     HttpOnly: true,
-    Secure:   true,
-    SameSite: http.SameSiteStrictMode,
+    Secure:   os.Getenv("ENV") == "production",
+    SameSite: http.SameSiteNoneMode,
   })
 
   w.WriteHeader(http.StatusOK)
-  json.NewEncoder(w).Encode(map[string]string{"message": "Logged in successfully"})
+  json.NewEncoder(w).Encode(user)  
 }

@@ -1,0 +1,4 @@
+.DS_Store
+frontend/.next/
+backend/.env
+backend/go.sum
