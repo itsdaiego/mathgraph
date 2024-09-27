@@ -16,10 +16,10 @@ export default function LessonLayout({ children }: LayoutProps) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch('/api/profile')
+      const res = await fetch('http://localhost:8080/api/profile', { credentials: 'include' })
       if (res.ok) {
         const data = await res.json()
-        setUsername(data.profile.username)
+        setUsername(data.username)
       } else {
         router.push('/login')
       }
