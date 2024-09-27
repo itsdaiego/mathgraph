@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/joho/godotenv"
 	"github.com/supabase-community/gotrue-go/types"
 )
 
@@ -35,13 +34,8 @@ type SuccessResponse struct {
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	var signupReq SignupRequest
-	err = json.NewDecoder(r.Body).Decode(&signupReq)
+  err := json.NewDecoder(r.Body).Decode(&signupReq)
 	if err != nil {
 		log.Printf("Error decoding request body: %v", err)
 		w.WriteHeader(http.StatusBadRequest)

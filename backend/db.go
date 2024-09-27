@@ -1,13 +1,16 @@
 package main
 
 import (
-  "log"
-  "github.com/supabase-community/supabase-go"
-  "os"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/supabase-community/supabase-go"
 )
 
 
 func createSupabaseClient()  (*supabase.Client, error) {
+  godotenv.Load()
 	supabaseUrl := os.Getenv("SUPABASE_URL")
 	supabaseKey := os.Getenv("SUPABASE_ANON_KEY")
 

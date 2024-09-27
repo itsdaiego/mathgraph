@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 )
 
 type LoginRequest struct {
@@ -19,14 +18,9 @@ type LoginRequest struct {
 
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-  err := godotenv.Load()
-  if err != nil{
-    log.Fatal("Error loading .env file")
-  }
-
   var loginReq LoginRequest
 
-  err = json.NewDecoder(r.Body).Decode(&loginReq)
+  err := json.NewDecoder(r.Body).Decode(&loginReq)
   if err != nil {
     log.Printf("Error decoding login request body: %v", err)
     http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -62,10 +56,11 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
     Name:     "session_token",
     Value:    tokenString,
     Path:     "/",
+    Domain:   "localhost",
     MaxAge:   60 * 60 * 24 * 7, // 7 days
     HttpOnly: true,
     Secure:   os.Getenv("ENV") == "production",
-    SameSite: http.SameSiteNoneMode,
+    SameSite: http.SameSiteLaxMode,
   })
 
   w.WriteHeader(http.StatusOK)

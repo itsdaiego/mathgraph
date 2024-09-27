@@ -21,6 +21,7 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 func main() {
   http.HandleFunc("/api/login", corsMiddleware(loginHandler))
   http.HandleFunc("/api/signup", corsMiddleware(signupHandler))
+  http.HandleFunc("/api/subjects", corsMiddleware(subjectHandler))
 
   log.Println("Starting server on :8080")
   log.Fatal(http.ListenAndServe(":8080", nil))

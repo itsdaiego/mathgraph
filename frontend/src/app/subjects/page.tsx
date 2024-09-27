@@ -18,8 +18,9 @@ function LessonPage() {
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/subjects`, {
+    fetch(`http://localhost:8080/api/subjects`, {
       method: 'GET',
+      credentials: 'include',
     })
     .then(res => {
       if (!res.ok) {
