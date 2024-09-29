@@ -49,13 +49,13 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 	var profile Profile
 
 	userId, err := getUserIdFromSessionToken(cookie.Value)
-  if err != nil {
-    log.Printf("Error getting user id from session token: %v", err)
-    http.Error(w, "Error getting user id from session token", http.StatusUnauthorized)
-    return
-  }
+	if err != nil {
+		log.Printf("Error getting user id from session token: %v", err)
+		http.Error(w, "Error getting user id from session token", http.StatusUnauthorized)
+		return
+	}
 
-  fmt.Println(userId)
+	fmt.Println(userId)
 
 	_, err = supabaseClient.From("profiles").Select("*", "count", false).Eq("id", userId).Single().ExecuteTo(&profile)
 	if err != nil {
