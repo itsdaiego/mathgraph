@@ -55,16 +55,12 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(userId)
-
 	_, err = supabaseClient.From("profiles").Select("*", "count", false).Eq("id", userId).Single().ExecuteTo(&profile)
 	if err != nil {
 		log.Printf("Error getting profile: %v", err)
 		http.Error(w, "Error getting profile", http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Println(profile.ID, profile.Username)
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(profile)

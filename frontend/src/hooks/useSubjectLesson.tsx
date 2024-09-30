@@ -29,7 +29,7 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
     const updateProgress = async () => {
       if (shouldUpdateProgress) {
         try {
-          const progressionReq = await fetch('http://localhost:3000/api/progression', {
+          const progressionReq = await fetch('http://localhost:8080/api/progression', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -56,7 +56,7 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
           await updateProgress()
         }
 
-        const progressionReq = await fetch(`http://localhost:3000/api/progression?subjectId=${subjectId}`, {
+        const progressionReq = await fetch(`http://localhost:8080/api/progression?subjectId=${subjectId}`, {
           method: 'GET',
           credentials: 'include',
         })
@@ -67,7 +67,7 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
 
         const progressionData = await progressionReq.json()
 
-        const lessonReq = await fetch(`http://localhost:3000/api/subjects/${subjectId}?lessonId=${progressionData.lesson_id}`, {
+        const lessonReq = await fetch(`http://localhost:8080/api/subjects/${subjectId}?lessonId=${progressionData.lesson_id}`, {
           method: 'GET',
           credentials: 'include',
         })

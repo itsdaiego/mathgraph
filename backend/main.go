@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"github.com/gorilla/mux"
 )
 
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
@@ -19,11 +20,15 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
-	http.HandleFunc("/api/login", corsMiddleware(loginHandler))
-	http.HandleFunc("/api/signup", corsMiddleware(signupHandler))
-	http.HandleFunc("/api/subjects", corsMiddleware(subjectHandler))
-	http.HandleFunc("/api/profile", corsMiddleware(profileHandler))
+	r := mux.NewRouter()
+
+	r.HandleFunc("/api/login", corsMiddleware(loginHandler)).Methods("POST", "OPTIONS")
+	r.HandleFunc("/api/signup", corsMiddleware(signupHandler)).Methods("POST", "OPTIONS")
+	r.HandleFunc("/api/subjects", corsMiddleware(subjectHandler)).Methods("GET", "OPTIONS")
+	r.HandleFunc("/api/profile", corsMiddleware(profileHandler)).Methods("GET", "OPTIONS")
+	r.HandleFunc("/api/subjects/{id}", corsMiddleware(subjectLessonHandler)).Methods("GET", "OPTIONS")
+	r.HandleFunc("/api/progression", corsMiddleware(progressionHandler)).Methods("GET", "POST", "OPTIONS")
 
 	log.Println("Starting server on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
