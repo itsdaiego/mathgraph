@@ -23,9 +23,10 @@ const LessonPage = ({ params }: URLOptions) => {
   const searchParams = useSearchParams()
   const lessonId = searchParams.get('lessonId') || '1'
   const shouldUpdateProgress = searchParams.get('shouldUpdateProgress') === 'true'
-  console.log('lesson id ', lessonId)
   
   const { lesson, loading, error, nextLessonId, prevLessonId } = useSubjectLesson(subjectId, lessonId, shouldUpdateProgress)
+
+  console.log('prev and next lesson ids', prevLessonId, nextLessonId)
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>

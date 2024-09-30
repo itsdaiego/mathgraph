@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/supabase-community/postgrest-go"
 )
 
 type Subject struct {
@@ -68,8 +69,13 @@ func subjectLessonHandler(w http.ResponseWriter, r *http.Request) {
   }
 
 
+  orderOpts := postgrest.OrderOpts{
+    Ascending:  true,
+    NullsFirst: false,
+  }
+
   var lessons []map[string]interface{}
-  _, err = supabaseClient.From("lessons").Select("*", "count", false).Eq("subject_id", subjectId).Order("id", nil).ExecuteTo(&lessons)
+  _, err = supabaseClient.From("lessons").Select("*", "count", false).Eq("subject_id", subjectId).Order("id", &orderOpts).ExecuteTo(&lessons)
   if err != nil {
     log.Printf("Error fetching lessons: %v", err)
     http.Error(w, "Failed to fetch lessons", http.StatusInternalServerError)

@@ -8,11 +8,9 @@ import (
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 )
 
 func getUserIdFromSessionToken(sessionToken string) (string, error) {
-	godotenv.Load()
 	token, err := jwt.Parse(sessionToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
