@@ -49,6 +49,40 @@ func subjectHandler(w http.ResponseWriter, r *http.Request) {
   json.NewEncoder(w).Encode(subjects)
 }
 
+func subjectIdHandler(w http.ResponseWriter, r *http.Request) {
+  cookie, err := r.Cookie("session_token")
+  if err != nil || cookie.Value == "" {
+    log.Printf("Error getting session token cookie: %v", err)
+    http.Error(w, "Unauthorized", http.StatusUnauthorized)
+    return
+  }
+
+  vars := mux.Vars(r)
+
+  subjectId := vars["subjectId"]
+
+  supabaseClient, err := createSupabaseClient()
+  if err != nil {
+    log.Printf("Error creating Supabase client: %v", err)
+    http.Error(w, "Error creating Supabase client", http.StatusInternalServerError)
+    return
+  }
+
+  var subject Subject
+  _, err = supabaseClient.From("subjects").Select("*", "count", false).Eq("id", subjectId).ExecuteTo(&subject)
+
+  if err != nil {
+    log.Printf("Error getting subject: %v", err)
+    http.Error(w, "Error getting subject", http.StatusInternalServerError)
+    return
+  }
+
+  w.WriteHeader(http.StatusOK)
+  w.Header().Set("Content-Type", "application/json")
+
+  json.NewEncoder(w).Encode(subject)
+}
+
 
 func subjectLessonHandler(w http.ResponseWriter, r *http.Request) {
   cookie, err := r.Cookie("session_token")
@@ -59,8 +93,8 @@ func subjectLessonHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   vars := mux.Vars(r)
-  subjectId := vars["id"]
-  lessonId := r.URL.Query().Get("lessonId")
+  subjectId := vars["subjectId"]
+  lessonId := vars["lessonId"]
   supabaseClient, err := createSupabaseClient()
   if err != nil {
     log.Printf("Error creating Supabase client: %v", err)
