@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { LessonExercise } from "@/app/subjects/[id]/page"
 import GraphBox from "@/components/graph"
 import GraphMetadata from "./graphMetadata"
+import { useSubject } from "@/hooks/useSubject"
 
 type Props = {
   width: number
@@ -21,43 +22,33 @@ const COMPONENT_MAP: Record<string, any> = {
   'quadratic-function': dynamic(() => import('@/components/algebra/quadratic'))
 }
 
-const INPUT_MAP: Record<string, any> = {
-  'slope-function': [
-    { id: 'm', label: 'Slope' },
-    { id: 'b', label: 'Y-intercept' }
-  ],
-  'quadratic-function': [
-    { id: 'a', label: 'a' },
-    { id: 'b', label: 'b' },
-    { id: 'c', label: 'c' }
-  ]
-}
-
 const Renderer = (props: Props) => {
   const { width, height, gridSize, xAxisCount, yAxisCount, lesson } = props
+
   useEffect(() => {
     setInputFields(lesson.inputs.map(field => ({
       id: field.id,
       label: field.label,
-      value: field.value
+      value: field.value,
+      type: field.type
     })))
   }, [lesson])
 
-  const [inputFields, setInputFields] = useState<LessonExercise['inputs'] | null>(null)
+  const [inputFields, setInputFields] = useState<LessonExercise['inputs']>([])
+  const subject = useSubject(lesson.subject_id)
+
+  console.log('subject', subject)
 
   const handleInputChange = (id: string, value: number) => {
-    setInputFields(fields => {
-      if (!fields) {
-        return null
-      }
-
-      return fields.map(field => 
+    setInputFields(fields =>
+      fields.map(field => 
         field.id === id ? { ...field, value } : field
-      )
-    })
+      ))
   }
 
   const GraphComponent = COMPONENT_MAP[lesson.title]
+
+  console.log('lesson info', lesson)
 
   return (
     <div className="flex flex-row">
@@ -67,6 +58,7 @@ const Renderer = (props: Props) => {
             lesson={lesson}
             inputFields={inputFields}
             onInputChange={handleInputChange}
+            subjectName="Algebra"
           />
           <div className="flex flex-col text-center">
             <svg width={width} height={height} style={{ border: '1px solid black' }}>

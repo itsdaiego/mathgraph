@@ -11,6 +11,7 @@ export type Lesson = {
   title: string
   inputs: Input[]
   formula: string
+  subject_id: number
 }
 
 type Input = {
@@ -67,9 +68,8 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
         }
 
         const progressionData = await progressionReq.json()
-        console.log('progression data', progressionData)
 
-        const lessonReq = await fetch(`http://localhost:8080/api/subjects/${subjectId}?lessonId=${progressionData.lesson_id}`, {
+        const lessonReq = await fetch(`http://localhost:8080/api/subjects/${subjectId}/lessons/${progressionData.lesson_id}`, {
           method: 'GET',
           credentials: 'include',
         })

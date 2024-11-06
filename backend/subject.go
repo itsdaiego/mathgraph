@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -70,6 +71,8 @@ func subjectIdHandler(w http.ResponseWriter, r *http.Request) {
 
   var subject Subject
   _, err = supabaseClient.From("subjects").Select("*", "count", false).Eq("id", subjectId).ExecuteTo(&subject)
+
+  fmt.Println("Subject: ", subject, subjectId)
 
   if err != nil {
     log.Printf("Error getting subject: %v", err)

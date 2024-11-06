@@ -13,8 +13,10 @@ export type LessonExercise = {
     id: string
     label: string
     value: string | number
+    type: string
   }[]
   formula: string
+  subject_id: number
 }
 
 const LessonPage = ({ params }: URLOptions) => {
@@ -25,8 +27,6 @@ const LessonPage = ({ params }: URLOptions) => {
   const shouldUpdateProgress = searchParams.get('shouldUpdateProgress') === 'true'
   
   const { lesson, loading, error, nextLessonId, prevLessonId } = useSubjectLesson(subjectId, lessonId, shouldUpdateProgress)
-
-  console.log('prev and next lesson ids', prevLessonId, nextLessonId)
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
