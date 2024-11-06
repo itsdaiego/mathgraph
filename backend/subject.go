@@ -70,7 +70,7 @@ func subjectIdHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   var subject Subject
-  _, err = supabaseClient.From("subjects").Select("*", "count", false).Eq("id", subjectId).ExecuteTo(&subject)
+  _, err = supabaseClient.From("subjects").Select("*", "count", false).Eq("id", subjectId).Single().ExecuteTo(&subject)
 
   fmt.Println("Subject: ", subject, subjectId)
 
@@ -97,7 +97,6 @@ func subjectLessonHandler(w http.ResponseWriter, r *http.Request) {
 
   vars := mux.Vars(r)
   subjectId := vars["subjectId"]
-  lessonId := vars["lessonId"]
   supabaseClient, err := createSupabaseClient()
   if err != nil {
     log.Printf("Error creating Supabase client: %v", err)
@@ -124,13 +123,16 @@ func subjectLessonHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  currentLessonIndex := -1
-  for i, lesson := range lessons {
-    if lesson["id"].(float64) == parseFloat(lessonId) {
-      currentLessonIndex = i
-      break
-    }
-  }
+  userId, err := getUserIdFromSessionToken(cookie.Value)
+
+
+  var progression Progression
+  _, err = supabaseClient.From("progression").Select("*", "count", false).Eq("profile_id", userId).Eq("subject_id", subjectId).Single().ExecuteTo(&progression)
+
+
+  currentLessonIndex := progression.LessonID - 1
+
+  fmt.Println("Current lesson", currentLessonIndex)
 
   if currentLessonIndex == -1 {
     http.Error(w, "Lesson not found", http.StatusNotFound)

@@ -20,8 +20,6 @@ const GraphMetadata: React.FC<Props> = ({
 
   const capitalizedTitle = lesson?.title.charAt(0).toUpperCase() + lesson.title.slice(1).replace(/-/g, ' ')
 
-  console.log('inputFields', inputFields)
-
   const renderEquation = () => {
     return (
       <>
@@ -29,11 +27,11 @@ const GraphMetadata: React.FC<Props> = ({
         <div className="text-lg flex items-center flex-wrap">
         {inputFields.map(field => (
           <React.Fragment key={field.id}>
-            { field.type === 'text' && (
+            {field.type === 'text' && (
               <span className="mx-1">{field.value}</span>
             )}
 
-            { field.type === 'input' && (
+            {field.type === 'input' && (
               <input
                 className="w-16 mx-1 px-2 py-1 border rounded text-sm text-slate-500"
                 type="number"

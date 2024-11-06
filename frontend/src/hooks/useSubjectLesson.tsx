@@ -69,7 +69,7 @@ export const useSubjectLesson = (subjectId: string, lessonId: string, shouldUpda
 
         const progressionData = await progressionReq.json()
 
-        const lessonReq = await fetch(`http://localhost:8080/api/subjects/${subjectId}/lessons/${progressionData.lesson_id}`, {
+        const lessonReq = await fetch(`http://localhost:8080/api/subjects/${subjectId}/lessons`, {
           method: 'GET',
           credentials: 'include',
         })

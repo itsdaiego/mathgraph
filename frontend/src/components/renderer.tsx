@@ -19,7 +19,8 @@ type Props = {
 // const COMPONENT_MAP: Record<string, Partial<GraphComponentProps>> = {
 const COMPONENT_MAP: Record<string, any> = {
   'slope-function': dynamic(() => import('@/components/algebra/slope')),
-  'quadratic-function': dynamic(() => import('@/components/algebra/quadratic'))
+  'quadratic-function': dynamic(() => import('@/components/algebra/quadratic')),
+  'sine-function': dynamic(() => import('@/components/trigonometry/sine'))
 }
 
 const Renderer = (props: Props) => {

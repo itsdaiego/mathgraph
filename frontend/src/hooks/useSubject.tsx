@@ -33,7 +33,7 @@ export const useSubject = (subjectId: number) => {
     }
 
     fetchData()
-  }) 
+  }, [subjectId]) 
 
   return subject
 }

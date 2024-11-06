@@ -27,7 +27,7 @@ func main() {
 	r.HandleFunc("/api/subjects", corsMiddleware(subjectHandler)).Methods("GET", "OPTIONS")
 	r.HandleFunc("/api/profile", corsMiddleware(profileHandler)).Methods("GET", "OPTIONS")
 	r.HandleFunc("/api/subjects/{subjectId}", corsMiddleware(subjectIdHandler)).Methods("GET", "OPTIONS")
-	r.HandleFunc("/api/subjects/{subjectId}/lessons/{lessonId}", corsMiddleware(subjectLessonHandler)).Methods("GET", "OPTIONS")
+	r.HandleFunc("/api/subjects/{subjectId}/lessons", corsMiddleware(subjectLessonHandler)).Methods("GET", "OPTIONS")
 	r.HandleFunc("/api/progression", corsMiddleware(progressionHandler)).Methods("GET", "POST", "OPTIONS")
 
 	log.Println("Starting server on :8080")
