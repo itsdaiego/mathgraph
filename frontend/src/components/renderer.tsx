@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import { LessonExercise } from "@/app/subjects/[id]/page"
 import GraphBox from "@/components/graph"
 import GraphMetadata from "./graphMetadata"
-import { useSubject } from "@/hooks/useSubject"
 
 type Props = {
   width: number
@@ -36,9 +35,6 @@ const Renderer = (props: Props) => {
   }, [lesson])
 
   const [inputFields, setInputFields] = useState<LessonExercise['inputs']>([])
-  const subject = useSubject(lesson.subject_id)
-
-  console.log('subject', subject)
 
   const handleInputChange = (id: string, value: number) => {
     setInputFields(fields =>
@@ -48,8 +44,6 @@ const Renderer = (props: Props) => {
   }
 
   const GraphComponent = COMPONENT_MAP[lesson.title]
-
-  console.log('lesson info', lesson)
 
   return (
     <div className="flex flex-row">

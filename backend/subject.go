@@ -132,8 +132,6 @@ func subjectLessonHandler(w http.ResponseWriter, r *http.Request) {
 
   currentLessonIndex := progression.LessonID - 1
 
-  fmt.Println("Current lesson", currentLessonIndex)
-
   if currentLessonIndex == -1 {
     http.Error(w, "Lesson not found", http.StatusNotFound)
     return
