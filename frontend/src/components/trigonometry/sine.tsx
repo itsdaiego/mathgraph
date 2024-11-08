@@ -11,36 +11,39 @@ type Props = {
 
 
 const Sine = (props: Props) => {
-  const { width, height, gridSize, xAxisCount, fields  } = props
+  const { width, height, gridSize, xAxisCount, fields } = props
+
+  console.log("fields", fields)
 
   const plotFunction = (x: number) => {
     const amplitude = fields.find(field => field.id === 'amplitude')?.value
-    const period = fields.find(field => field.id === 'period')?.value
+    const frequency = fields.find(field => field.id === 'frequency')?.value
     const phaseShift = fields.find(field => field.id === 'phase')?.value
 
-    if (amplitude === undefined || period === undefined || phaseShift === undefined) {
+    if (amplitude === undefined || frequency === undefined || phaseShift === undefined) {
       return 0
     }
 
     // f(x) = Amplitude * sin(2pi / Period * x * Phase)
-    const result = Number(amplitude) * Math.sin((2 * Math.PI / Number(period)) * x + Number(phaseShift))
+    const result = Number(amplitude) * Math.sin((Number(frequency) * Math.PI) * x + Number(phaseShift))
+
 
     return result
   }
 
   return (
-    <svg width={width}>
+    <svg width={width} height={height}>
       <polyline
         fill="none"
         stroke="blue"
-        strokeWidth={4}
+        strokeWidth={2}
         points={
-          Array.from({ length: xAxisCount * 2 + 1 }, (_, i) => {
-            const x = i - xAxisCount
+          Array.from({ length: width }, (_, i) => {
+            const x = (i / gridSize) - xAxisCount
             const middle = height / 2
-            const scale = gridSize / 2
-        
-            return `${i * gridSize},${middle - plotFunction(x) * scale}`
+            const scale = height / (2 * xAxisCount)
+
+            return `${i},${middle - plotFunction(x) * scale}`
           }).join(' ')
         }
       />
