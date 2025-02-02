@@ -1,6 +1,8 @@
-# Project Name
+# Mathgraph
 
-This project is structured with a Next.js frontend (UI) and a Go backend (API).
+Lean by math by visualizating it!
+
+![image](https://github.com/user-attachments/assets/74816c4a-375f-4ea4-a216-f1f062965589)
 
 
 ## Running the UI
